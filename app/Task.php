@@ -1,8 +1,6 @@
 <?php
 
 namespace App;
-use App\User;
-use App\Board;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model

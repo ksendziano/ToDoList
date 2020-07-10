@@ -13,21 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::auth();
-
-Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
 
 Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/boards', 'BoardController@index');
+Route::post('/board', 'BoardController@store');
+Route::delete('/board/{board}', 'BoardController@destroy');
 
 Route::get('/tasks', 'TaskController@index');
-
 Route::post('/task', 'TaskController@store');
-
 Route::delete('/task/{task}', 'TaskController@destroy');

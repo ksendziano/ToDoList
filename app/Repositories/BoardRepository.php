@@ -4,13 +4,13 @@
 namespace App\Repositories;
 
 use App\Board;
-Use App\user;
+use App\User;
 
-class TaskRepository
+class BoardRepository
 {
     public function forUser(User $user)
     {
-        return $user->tasks()
+        return $user->boards()
             ->orderBy('created_at', 'asc')
             ->get();
     }

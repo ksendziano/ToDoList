@@ -2,8 +2,6 @@
 
 @section('content')
 
-    <!-- Bootstrap шаблон... -->
-
     <div class="panel-body">
         <!-- Отображение ошибок проверки ввода -->
     @include('common.errors')
