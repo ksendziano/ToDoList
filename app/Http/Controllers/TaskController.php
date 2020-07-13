@@ -34,6 +34,7 @@ class TaskController extends Controller
         ]);
         $request->user()->tasks()->create([
             'name' => $request->name,
+            'board_id' => board()->id(),
         ]);
 
         return redirect('/tasks');

@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name','board_id'];
     public function user()
     {
         return $this->belongsTo(User::class);

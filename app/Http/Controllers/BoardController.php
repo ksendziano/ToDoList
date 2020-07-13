@@ -19,14 +19,13 @@ class BoardController extends Controller
 
         return view('boards.index', [
             'boards' => $this->boards->forUser($request->user()),
-            'tasks'  => $request->user()->boards()->tasks(),
+            'tasks'  => $request->user()->tasks(),
         ]);
     }
     public function store(Request $request)
     {
         $this->validate($request, [
             'name' => 'required|max:255',
-            'color'=>'Red','Green','Blue'
         ]);
         $request->user()->boards()->create([
             'name' => $request->name,
