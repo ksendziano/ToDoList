@@ -49,7 +49,7 @@
                         <!-- Форма новой задачи -->
                             <form action="{{ url('task') }}" method="POST" class="form-horizontal">
                             {{ csrf_field() }}
-
+                                <input type="hidden" value="{{$board->id}}" name="board_id" class="form-control">
                             <!-- Имя задачи -->
                                 <div class="form-group">
                                     <label for="task" class="col-sm-3 control-label">Задача</label>

@@ -34,10 +34,11 @@ class TaskController extends Controller
         ]);
         $request->user()->tasks()->create([
             'name' => $request->name,
-            'board_id' => board()->id(),
+            'board_id'=> $request->board_id,
         ]);
 
-        return redirect('/tasks');
+
+        return redirect('/boards');
     }
     public function destroy(Request $request, Task $task)
     {
