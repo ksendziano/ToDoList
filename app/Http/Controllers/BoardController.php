@@ -34,8 +34,8 @@ class BoardController extends Controller
 
         return redirect('/boards');
     }
-<<<<<<< Updated upstream
-=======
+
+
     public function edit($id)
     {
         //
@@ -46,5 +46,5 @@ class BoardController extends Controller
         $board->delete();
         return redirect('/boards');
     }
->>>>>>> Stashed changes
+
 }
