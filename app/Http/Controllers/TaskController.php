@@ -35,15 +35,57 @@ class TaskController extends Controller
         $request->user()->tasks()->create([
             'name' => $request->name,
             'board_id'=> $request->board_id,
+            'description'=>$request->description,
+            'scheduled_date'=>$request->scheduled_date,
+            'real_date'=>$request->scheduled_date,
+            'status'=>$request->status,
         ]);
 
 
+        return redirect('/boards');
+    }
+    public function copy(Request $request,$id)
+    {
+        $task=Task::find($id);
+        $request->user()->tasks()->create([
+            'name' => $task->name,
+            'board_id'=> $request->board_id,
+            'description'=>$task->description,
+            'scheduled_date'=>$task->scheduled_date,
+            'real_date'=>$task->scheduled_date,
+            'status'=>$task->status,
+        ]);
+        return redirect('/boards');
+    }
+    public function replace(Request $request,$id)
+    {
+        $task = Task::find($id);
+        $task->board_id = $request->board_id;
+        $task->save();
+        return redirect('/boards');
+    }
+    public function openEdit(Request $request, Task $task)
+    {
+        return view('tasks.edit', [
+            'task' => $task,
+        ]);
+    }
+    public function edit(Request $request,$id)
+    {
+        $task=Task::find($id);
+        $task->update([
+            'name' => $request->name,
+            'description'=>$request->description,
+            'scheduled_date'=>$request->scheduled_date,
+            'real_date'=>$request->real_date,
+            'status'=>$request->status,
+        ]);
         return redirect('/boards');
     }
     public function destroy(Request $request, Task $task)
     {
         $this ->authorize('destroy',$task);
         $task->delete();
-        return redirect('/tasks');
+        return redirect('/boards');
     }
 }

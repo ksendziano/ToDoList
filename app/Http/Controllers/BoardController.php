@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Board;
 use App\Repositories\BoardRepository;
 use Illuminate\Http\Request;
 
@@ -32,6 +33,20 @@ class BoardController extends Controller
             'color'=> $request->color,
         ]);
 
+        return redirect('/boards');
+    }
+    public function show($id)
+    {
+        //
+    }
+    public function edit($id)
+    {
+        //
+    }
+    public function destroy(Request $request, Board $board)
+    {
+        $this ->authorize('destroy',$board);
+        $board->delete();
         return redirect('/boards');
     }
 }
