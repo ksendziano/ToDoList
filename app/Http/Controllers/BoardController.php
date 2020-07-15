@@ -34,4 +34,17 @@ class BoardController extends Controller
 
         return redirect('/boards');
     }
+<<<<<<< Updated upstream
+=======
+    public function edit($id)
+    {
+        //
+    }
+    public function destroy(Request $request, Board $board)
+    {
+        $this ->authorize('destroy',$board);
+        $board->delete();
+        return redirect('/boards');
+    }
+>>>>>>> Stashed changes
 }

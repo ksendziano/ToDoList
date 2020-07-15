@@ -39,6 +39,7 @@
         </form>
     </div>
     @if (count($boards) > 0)
+<<<<<<< Updated upstream
         <div class="panel panel-default">
                     @foreach ($boards as $board)
                         <div>{{ $board->name }}</div>
@@ -113,5 +114,9 @@
                         @endif
                     @endforeach
         </div>
+=======
+
+                    @include('boards.boards')
+>>>>>>> Stashed changes
     @endif
 @endsection
