@@ -35,10 +35,6 @@ class BoardController extends Controller
 
         return redirect('/boards');
     }
-    public function show($id)
-    {
-        //
-    }
     public function edit($id)
     {
         //

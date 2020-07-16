@@ -18,11 +18,12 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', function () {
     return view('home');
 });
-
 Route::get('/boards', 'BoardController@index');
 Route::post('/board', 'BoardController@store');
 Route::delete('/board/{board}', 'BoardController@destroy');
-
+Route::post('/logout',function(){
+    Auth::logout();
+});
 Route::get('/tasks', 'TaskController@index');
 Route::post('/task', 'TaskController@store');
 Route::get('/task/{task}','TaskController@openEdit');

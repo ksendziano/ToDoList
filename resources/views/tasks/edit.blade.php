@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('content')
     <form action="{{ url('task/'.$task->id.'/edit') }}" method="POST">
         {{ csrf_field() }}
         <div class="form-group">
@@ -33,4 +36,4 @@
             <i class="fa fa-btn fa-trash"></i>Редактировать задачу
         </button>
     </form>
-
+@endsection
