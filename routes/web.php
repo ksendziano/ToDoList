@@ -26,4 +26,8 @@ Route::post('/logout',function(){
 });
 Route::get('/tasks', 'TaskController@index');
 Route::post('/task', 'TaskController@store');
+Route::get('/task/{task}','TaskController@openEdit');
+Route::post('/task/{task}/edit', 'TaskController@edit');
+Route::post('/task/{task}/copy', 'TaskController@copy');
+Route::post('/task/{task}/replace', 'TaskController@replace');
 Route::delete('/task/{task}', 'TaskController@destroy');

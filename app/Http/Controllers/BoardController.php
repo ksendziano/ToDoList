@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Board;
 use App\Repositories\BoardRepository;
 use Illuminate\Http\Request;
 
@@ -34,7 +35,6 @@ class BoardController extends Controller
 
         return redirect('/boards');
     }
-
 
     public function edit($id)
     {

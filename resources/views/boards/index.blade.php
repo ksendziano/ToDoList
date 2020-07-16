@@ -22,9 +22,9 @@
             <div class="form-group">
                 <label for="board" >Выбор цвета</label>
                 <div>
-                    <input type="radio" name="color" id="board-color" value="Red" class="form-control">Красный
-                    <input type="radio" name="color" id="board-color" value="Blue" class="form-control">Синий
-                    <input type="radio" name="color" id="board-color" value="Green" class="form-control">Зеленый
+                    <input type="radio" name="color" id="board-color" value="#FF0000" class="form-control">Красный
+                    <input type="radio" name="color" id="board-color" value="#0000FF" class="form-control">Синий
+                    <input type="radio" name="color" id="board-color" value="#008000" class="form-control">Зеленый
                 </div>
 
             </div>
