@@ -44,5 +44,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(board::class);
     }
+    public function isModerator()
+    {
+        return $this->moderator;
+    }
 
 }

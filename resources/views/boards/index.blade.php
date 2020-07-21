@@ -6,7 +6,7 @@
     @include('common.errors')
 
     <!-- Форма новой доски -->
-        <form action="{{ url('board') }}" method="POST" class="form-horizontal">
+        <form action="{{ url('user'.$user_id.'/board') }}" method="POST" class="form-horizontal">
         {{ csrf_field() }}
 
         <!-- Имя доски -->
@@ -39,6 +39,8 @@
         </form>
     </div>
     @if (count($boards) > 0)
-                    @include('boards.boards')
+        @foreach ($boards as $board)
+            <a href="board/{{$board->id}}">{{$board->name}}</a>
+        @endforeach
     @endif
 @endsection

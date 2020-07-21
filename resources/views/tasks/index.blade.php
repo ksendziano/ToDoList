@@ -1,19 +1,15 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        Текущая задача
-    </div>
-
-    <div class="panel-body">
-        <table class="table table-striped task-table">
+<div class="panel panel-default" id="tasks-table">
+    <div class="panel-body" >
+        <table class="table table-striped task-table" >
             <style>
-                table
+                #tasks-table
                 {
-                    width:30%;
+                    width:100%;
                 }
             </style>
             <!-- Заголовок таблицы -->
             <thead>
-            <th>Task</th>
+            <th>Задачи</th>
             <th>&nbsp;</th>
             </thead>
 
@@ -22,17 +18,42 @@
             @foreach ($board->tasks as $task)
                 <tr>
                     <!-- Имя задачи -->
-                    <td class="table-text">
+                    <td>
+                        <b>Имя задачи</b>
+                    </td>
+                    <td>
                         <div>{{ $task->name }}</div>
-                        <div>{{ $task->description }}</div>
-                        <div>{{ $task->scheduled_date }}</div>
-                        <div>{{ $task->status }}</div>
                     </td>
                 </tr>
                 <tr>
+                    <td>
+                        <b>Описание задачи</b>
+                    </td>
+                    <td>
+                        <div>{{ $task->description }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Планируемые сроки</b>
+                    </td>
+                    <td>
+                        <div>{{ $task->scheduled_date }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Статус задачи</b>
+                    </td>
+                    <td>
+                        <div>{{ $task->status }}</div>
+                    </td>
+                </tr>
+
+                <tr>
                     <!-- Кнопка Редактировать -->
                     <td>
-                        <form action="{{ url('task/'.$task->id) }}" method="GET">
+                        <form action="{{ url('user'.$task->user_id.'/task/'.$task->id) }}" method="GET">
                             {{ csrf_field() }}
                             <button type="submit" id="edit-task-{{ $task->id }}" class="btn btn-danger">
                                 <i class="fa fa-btn fa-trash"></i>Редактировать
@@ -41,7 +62,7 @@
                     </td>
                     <!-- Кнопка Удалить -->
                     <td>
-                        <form action="{{ url('task/'.$task->id) }}" method="POST">
+                        <form action="{{ url('user'.$task->user_id.'/task/'.$task->id) }}" method="POST">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
 
@@ -53,7 +74,7 @@
                 </tr>
                 <tr>
                     <!-- Форма копировать в -->
-                    <form action="{{ url('task/'.$task->id.'/copy') }}" method="POST">
+                    <form action="{{ url('user'.$task->user_id.'/task/'.$task->id.'/copy') }}" method="POST">
                         {{ csrf_field() }}
                         <td>
                             <p>
@@ -74,7 +95,7 @@
                 </tr>
                 <tr>
                     <!-- Форма переместить в -->
-                    <form action="{{ url('task/'.$task->id.'/replace') }}" method="POST">
+                    <form action="{{ url('user'.$task->user_id.'/task/'.$task->id.'/replace') }}" method="POST">
                         {{ csrf_field() }}
                         <td>
                             <p>
@@ -92,6 +113,10 @@
                             </button>
                         </td>
                     </form>
+                </tr>
+                <tr>
+                    <td>   </td>
+                    <td>   </td>
                 </tr>
             @endforeach
             </tbody>

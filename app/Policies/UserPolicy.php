@@ -3,10 +3,9 @@
 namespace App\Policies;
 
 use App\User;
-use App\Board;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class BoardPolicy
+class UserPolicy
 {
     use HandlesAuthorization;
 
@@ -15,10 +14,9 @@ class BoardPolicy
      *
      * @return void
      */
-
-    public function action(User $user, Board $board)
+    public function action(User $user)
     {
-        return $user->id === $board->user_id||$user->moderator==1;
+        return $user->moderator==1;
     }
     public function __construct()
     {

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,21 +13,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::auth();
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('logout', 'Auth\LoginController@logout');
 
+Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', function () {
     return view('home');
 });
-Route::get('/boards', 'BoardController@index');
-Route::post('/board', 'BoardController@store');
-Route::delete('/board/{board}', 'BoardController@destroy');
-Route::post('/logout',function(){
-    Auth::logout();
-});
-Route::get('/tasks', 'TaskController@index');
-Route::post('/task', 'TaskController@store');
-Route::get('/task/{task}','TaskController@openEdit');
-Route::post('/task/{task}/edit', 'TaskController@edit');
-Route::post('/task/{task}/copy', 'TaskController@copy');
-Route::post('/task/{task}/replace', 'TaskController@replace');
-Route::delete('/task/{task}', 'TaskController@destroy');
+Route::get('/moderator', 'UserController@index');
+
+Route::get('/user{id}/boards', 'BoardController@showBoards');
+Route::get('/user{id}/board/{board_id}', 'BoardController@index');
+Route::post('/user{id}/board', 'BoardController@store');
+Route::delete('/user{id}/board/{board}', 'BoardController@destroy');
+
+Route::post('/user{id}/task', 'TaskController@store');
+Route::get('/user{id}/task/{task}','TaskController@openEdit');
+Route::post('/user{id}/task/{task}/edit', 'TaskController@edit');
+Route::post('/user{id}/task/{task}/copy', 'TaskController@copy');
+Route::post('/user{id}/task/{task}/replace', 'TaskController@replace');
+Route::delete('/user{id}/task/{task}', 'TaskController@destroy');

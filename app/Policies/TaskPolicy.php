@@ -15,9 +15,14 @@ class TaskPolicy
      *
      * @return void
      */
-    public function destroy(User $user, Task $task)
+    public function action(User $user, Task $task)
     {
-        return $user->id === $task->user_id;
+       // return ;
+        return $user->id === $task->user_id||$user->moderator==1;
+    }
+    public function store(User $user, $user_id)
+    {
+        return $user->isModerator();
     }
 
     public function __construct()
