@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Board;
 use App\Http\Requests;
 use App\Repositories\TaskRepository;
 use App\Task;
@@ -25,6 +26,7 @@ class TaskController extends Controller
     public function store(Request $request,$board_id)
     {
         //$this ->authorize('store',$user_id);
+        $board = Board::find($board_id);
         $this->validate($request, [
             'name' => 'required|max:255',
         ]);
@@ -54,7 +56,7 @@ class TaskController extends Controller
     public function move(Request $request,$board_id,Task $task)
     {
         $this ->authorize('action',$task);
-        $task->board_id = $board_id;
+        $task->board_id = $request->board_id;
         $task->save();
         return redirect()->route('boards.show',['board_id'=>$board_id]);
     }
