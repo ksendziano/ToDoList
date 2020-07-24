@@ -22,7 +22,7 @@ class TaskController extends Controller
         $this->tasks = $tasks;
     }
 
-    public function store(Request $request,$user_id)
+    public function store(Request $request,$board_id)
     {
         //$this ->authorize('store',$user_id);
         $this->validate($request, [
@@ -30,17 +30,15 @@ class TaskController extends Controller
         ]);
         $request->user()->tasks()->create([
             'name' => $request->name,
-            'board_id'=> $request->board_id,
+            'board_id'=>$board_id,
             'description'=>$request->description,
             'scheduled_date'=>$request->scheduled_date,
             'real_date'=>$request->scheduled_date,
             'status'=>$request->status,
         ]);
-
-
-        return redirect('/user'.$user_id.'/boards');
+        return redirect()->route('boards.show',['board_id'=>$board_id]);
     }
-    public function copy(Request $request,$user_id,Task $task)
+    public function copy(Request $request,$board_id,Task $task)
     {
         $this ->authorize('action',$task);
         $request->user()->tasks()->create([
@@ -51,25 +49,26 @@ class TaskController extends Controller
             'real_date' => $task->scheduled_date,
             'status' => $task->status,
         ]);
-        return redirect('/user'.$user_id.'/boards');
+        return redirect()->route('boards.show',['board_id'=>$board_id]);
     }
-    public function replace(Request $request,$user_id,Task $task)
+    public function move(Request $request,$board_id,Task $task)
     {
         $this ->authorize('action',$task);
-        $task->board_id = $request->board_id;
+        $task->board_id = $board_id;
         $task->save();
-        return redirect('/user'.$user_id.'/boards');
+        return redirect()->route('boards.show',['board_id'=>$board_id]);
     }
-    public function openEdit(Request $request,$user_id, Task $task)
+    public function edit(Request $request,$board_id, Task $task)
     {
         $this ->authorize('action',$task);
         return view('tasks.edit', [
             'task' => $task,
+            'board_id'=>$board_id,
         ]);
     }
-    public function edit(Request $request,$user_id,$id)
+    public function update(Request $request,$board_id,$task_id)
     {
-        $task=Task::find($id);
+        $task=Task::find($task_id);
         $task->update([
             'name' => $request->name,
             'description' => $request->description,
@@ -77,12 +76,12 @@ class TaskController extends Controller
             'real_date' => $request->real_date,
             'status' => $request->status,
         ]);
-        return redirect('/user'.$user_id.'/boards');
+        return redirect()->route('boards.show',['board_id'=>$board_id]);
     }
-    public function destroy(Request $request,$user_id, Task $task)
+    public function destroy(Request $request,$board_id, Task $task)
     {
         $this ->authorize('action',$task);
         $task->delete();
-        return redirect('/user'.$user_id.'/boards');
+        return redirect()->route('boards.show',['board_id'=>$board_id]);
     }
 }

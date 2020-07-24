@@ -18,6 +18,10 @@ class CreateTasksTable extends Migration
             $table->integer('user_id')->unsigned()->index();
             $table->integer('board_id')->index();
             $table->string('name');
+            $table->string('status');
+            $table->string('description');
+            $table->date('scheduled_date');
+            $table->date('real_date');
             $table->timestamps();
         });
     }

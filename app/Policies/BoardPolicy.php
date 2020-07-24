@@ -18,7 +18,7 @@ class BoardPolicy
 
     public function action(User $user, Board $board)
     {
-        return $user->id === $board->user_id||$user->moderator==1;
+        return $user->id === $board->user_id||$user->isModerator();
     }
     public function __construct()
     {

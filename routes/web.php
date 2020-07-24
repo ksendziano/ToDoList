@@ -21,14 +21,22 @@ Route::get('/', function () {
 });
 Route::get('/moderator', 'UserController@index');
 
-Route::get('/user{id}/boards', 'BoardController@showBoards');
-Route::get('/user{id}/board/{board_id}', 'BoardController@index');
-Route::post('/user{id}/board', 'BoardController@store');
-Route::delete('/user{id}/board/{board}', 'BoardController@destroy');
+Route::name('boards.')->prefix('boards')->group(function() {
+    Route::get('/', 'BoardController@index')->name('index');
+    Route::get('/{board_id}', 'BoardController@show')->name('show');
+    Route::post('/', 'BoardController@store')->name('store');
+    Route::get('/download', 'BoardController@download')->name('download');
+    Route::post('/{board}', 'BoardController@edit')->name('edit');
+    Route::post('/{board}/edit', 'BoardController@update')->name('update');
+    Route::delete('/{board}', 'BoardController@destroy')->name('destroy');
 
-Route::post('/user{id}/task', 'TaskController@store');
-Route::get('/user{id}/task/{task}','TaskController@openEdit');
-Route::post('/user{id}/task/{task}/edit', 'TaskController@edit');
-Route::post('/user{id}/task/{task}/copy', 'TaskController@copy');
-Route::post('/user{id}/task/{task}/replace', 'TaskController@replace');
-Route::delete('/user{id}/task/{task}', 'TaskController@destroy');
+    Route::name('tasks.')->prefix('{board_id}/tasks')->group(function() {
+        Route::get('/', 'TaskController@index')->name('index');
+        Route::post('/task', 'TaskController@store')->name('store');
+        Route::get('/{task}', 'TaskController@edit')->name('edit');
+        Route::post('/{task}/edit', 'TaskController@update')->name('update');
+        Route::post('/{task}/copy', 'TaskController@copy')->name('copy');
+        Route::post('/{task}/move', 'TaskController@move')->name('move');
+        Route::delete('/{task}/destroy', 'TaskController@destroy')->name('destroy');
+    });
+});

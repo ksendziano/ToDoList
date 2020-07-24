@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Board extends Model
 {
-    protected $fillable = ['name','color'];
+    protected $fillable = ['name','color','user_id'];
     public function user()
     {
         return $this->belongsTo(User::class);

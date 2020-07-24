@@ -11,7 +11,7 @@
                     margin-right: auto;
                 }
             </style>
-    <form action="{{ url('user'.$task->user_id.'/task/'.$task->id.'/edit') }}" method="POST">
+    <form action="{{ url(route('boards.tasks.update',['board_id'=>$board_id,'task'=>$task,])) }}" method="POST">
         {{ csrf_field() }}
         <table class="table table-striped task-table" id="edit-table">
         <div class="form-group">
@@ -76,6 +76,7 @@
                 <i class="fa fa-btn fa-trash"></i>Редактировать задачу
             </button>
         </td>
+            <td></td>
         </tr>
         </table>
 

@@ -53,7 +53,7 @@
                 <tr>
                     <!-- Кнопка Редактировать -->
                     <td>
-                        <form action="{{ url('user'.$task->user_id.'/task/'.$task->id) }}" method="GET">
+                        <form action="{{ url(route('boards.tasks.edit',['board_id'=>$board->id,'task'=>$task,])) }}" method="GET">
                             {{ csrf_field() }}
                             <button type="submit" id="edit-task-{{ $task->id }}" class="btn btn-danger">
                                 <i class="fa fa-btn fa-trash"></i>Редактировать
@@ -62,7 +62,7 @@
                     </td>
                     <!-- Кнопка Удалить -->
                     <td>
-                        <form action="{{ url('user'.$task->user_id.'/task/'.$task->id) }}" method="POST">
+                        <form action="{{ url(route('boards.tasks.destroy',['board_id'=>$board->id,'task'=>$task,])) }}" method="POST">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
 
@@ -74,7 +74,7 @@
                 </tr>
                 <tr>
                     <!-- Форма копировать в -->
-                    <form action="{{ url('user'.$task->user_id.'/task/'.$task->id.'/copy') }}" method="POST">
+                    <form action="{{ url(route('boards.tasks.copy',['board_id'=>$board_id,'task'=>$task,])) }}" method="POST">
                         {{ csrf_field() }}
                         <td>
                             <p>
@@ -95,7 +95,7 @@
                 </tr>
                 <tr>
                     <!-- Форма переместить в -->
-                    <form action="{{ url('user'.$task->user_id.'/task/'.$task->id.'/replace') }}" method="POST">
+                    <form action="{{url(route('boards.tasks.move',['board_id'=>$board_id,'task'=>$task,])) }}" method="POST">
                         {{ csrf_field() }}
                         <td>
                             <p>

@@ -28,7 +28,7 @@
                 @include('common.errors')
 
         <!-- Форма новой задачи -->
-            <form action="{{ url('user'.$board->user_id.'/task') }}" method="POST" class="form-horizontal">
+            <form action="{{ url(route('boards.tasks.store',['board_id'=>$board_id])) }}" class="form-horizontal" method="POST">
                 {{ csrf_field() }}
                 <input type="hidden" value="{{$board->id}}" name="board_id" class="form-control">
                 <!-- Имя задачи -->
@@ -89,20 +89,27 @@
                 </div>
                     </td>
                 </tr>
-            </form>
+           </form>
+
                 </tbody>
             </table>
             @if (count($board->tasks) > 0)
                 @include('tasks.index')
             @endif
-            <form action="{{ url('user'.$board->user_id.'/board/'.$board->id) }}" method="POST">
+            <form action="{{ route('boards.edit', ['board' => $board])}}" method="POST">
+                {{ csrf_field() }}
+                <button type="submit" id="edit-board-{{ $board->id }}" class="btn btn-danger">
+                    <i class="fa fa-btn fa-trash"></i>Редактировать доску
+                </button>
+            </form>
+            <form action="{{ route('boards.destroy', ['board' => $board])}}" method="POST">
                 {{ csrf_field() }}
                 {{ method_field('DELETE') }}
-
                 <button type="submit" id="delete-board-{{ $board->id }}" class="btn btn-danger">
                     <i class="fa fa-btn fa-trash"></i>Удалить доску
                 </button>
             </form>
+
 
         </div>
 
