@@ -25,12 +25,11 @@ class TaskController extends Controller
 
     public function store(Request $request,$board_id)
     {
-        //$this ->authorize('store',$user_id);
         $board = Board::find($board_id);
         $this->validate($request, [
             'name' => 'required|max:255',
         ]);
-        $request->user()->tasks()->create([
+        $board->user->tasks()->create([
             'name' => $request->name,
             'board_id'=>$board_id,
             'description'=>$request->description,

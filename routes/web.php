@@ -22,10 +22,10 @@ Route::get('/', function () {
 Route::get('/moderator', 'UserController@index');
 
 Route::name('boards.')->prefix('boards')->group(function() {
+    Route::get('/download', 'BoardController@download')->name('download');
     Route::get('/', 'BoardController@index')->name('index');
     Route::get('/{board_id}', 'BoardController@show')->name('show');
     Route::post('/', 'BoardController@store')->name('store');
-    Route::get('/download', 'BoardController@download')->name('download');
     Route::post('/{board}', 'BoardController@edit')->name('edit');
     Route::post('/{board}/edit', 'BoardController@update')->name('update');
     Route::delete('/{board}', 'BoardController@destroy')->name('destroy');

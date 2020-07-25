@@ -89,17 +89,16 @@ class BoardController extends Controller
         $board->delete();
         return redirect()->route('boards.index');
     }
-    public function download()
+    public function download(Request $request)
     {
-        $current_user = User::find(Auth::id());
+        $current_user = $request->user();
         if ($current_user->isModerator()) {
             $boards = Board::all();
         } else {
            $boards = $current_user->boards;
         }
-        $boards = $current_user->boards;
         if (count($boards) == 0)
-            return redirect()->route('board.index');
+            return redirect()->route('boards.index');
         $zip_archive = new \ZipArchive();
         $zip_file_name = 'board.zip';
         $zip_archive->open($zip_file_name, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
