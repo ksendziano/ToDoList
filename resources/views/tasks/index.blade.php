@@ -1,125 +1,56 @@
-<div class="panel panel-default" id="tasks-table">
-    <div class="panel-body" >
-        <table class="table table-striped task-table" >
+@extends('layouts.app')
+
+@section('content')
+    <div class="board" id="board_{{$board->id}}">
+        <div class="panel panel-default" id="board_table">
+
             <style>
-                #tasks-table
-                {
-                    width:100%;
+                #board_{{$board->id}}{
+
+                    background-color:{{$board->color}};
                 }
+                #board_table
+                {
+                    width: 50%;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+
             </style>
-            <!-- Заголовок таблицы -->
-            <thead>
-            <th>Задачи</th>
-            <th>&nbsp;</th>
-            </thead>
+            <div class="panel-body">
+                <table class="table table-striped task-table">
+                    <!-- Отображение ошибок проверки ввода -->
+                    <thead>
+                    <th>{{$board->name}}</th>
+                    <th>&nbsp;</th>
+                    </thead>
+                    <tbody>
+                    @include('common.errors')
 
-            <!-- Тело таблицы -->
-            <tbody>
-            @foreach ($board->tasks as $task)
-                <tr>
-                    <!-- Имя задачи -->
-                    <td>
-                        <b>Имя задачи</b>
-                    </td>
-                    <td>
-                        <div>{{ $task->name }}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Описание задачи</b>
-                    </td>
-                    <td>
-                        <div>{{ $task->description }}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Планируемые сроки</b>
-                    </td>
-                    <td>
-                        <div>{{ $task->scheduled_date }}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Статус задачи</b>
-                    </td>
-                    <td>
-                        <div>{{ $task->status }}</div>
-                    </td>
-                </tr>
+                    <!-- Форма новой задачи -->
 
-                <tr>
-                    <!-- Кнопка Редактировать -->
-                    <td>
-                        <form action="{{ url(route('boards.tasks.edit',['board_id'=>$board->id,'task'=>$task,])) }}" method="GET">
-                            {{ csrf_field() }}
-                            <button type="submit" id="edit-task-{{ $task->id }}" class="btn btn-danger">
-                                <i class="fa fa-btn fa-trash"></i>Редактировать
-                            </button>
-                        </form>
-                    </td>
-                    <!-- Кнопка Удалить -->
-                    <td>
-                        <form action="{{ url(route('boards.tasks.destroy',['board_id'=>$board->id,'task'=>$task,])) }}" method="POST">
-                            {{ csrf_field() }}
-                            {{ method_field('DELETE') }}
+                    </tbody>
+                </table>
+                @if (count($board->tasks) > 0)
+                    @include('tasks.index')
+                @endif
+                <form action="{{ route('boards.edit', ['board' => $board])}}" method="POST">
+                    {{ csrf_field() }}
+                    <button type="submit" id="edit-board-{{ $board->id }}" class="btn btn-danger">
+                        <i class="fa fa-btn fa-trash"></i>Редактировать доску
+                    </button>
+                </form>
+                <form action="{{ route('boards.destroy', ['board' => $board])}}" method="POST">
+                    {{ csrf_field() }}
+                    {{ method_field('DELETE') }}
+                    <button type="submit" id="delete-board-{{ $board->id }}" class="btn btn-danger">
+                        <i class="fa fa-btn fa-trash"></i>Удалить доску
+                    </button>
+                </form>
 
-                            <button type="submit" id="delete-task-{{ $task->id }}" class="btn btn-danger">
-                                <i class="fa fa-btn fa-trash"></i>Удалить задачу
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                <tr>
-                    <!-- Форма копировать в -->
-                    <form action="{{ url(route('boards.tasks.copy',['board_id'=>$board_id,'task'=>$task,])) }}" method="POST">
-                        {{ csrf_field() }}
-                        <td>
-                            <p>
-                                <select name="board_id" size="1">
-                                    <option>Выберите доску</option>
-                                    @foreach($boards as $board)
-                                        <option value="{{$board->id}}">{{$board->name}}</option>
-                                    @endforeach
-                                </select>
-                            </p>
-                        </td>
-                        <td>
-                            <button type="submit" id="copy-task-{{ $task->id }}" class="btn btn-danger">
-                                <i class="fa fa-btn fa-trash"></i>Копировать задачу
-                            </button>
-                        </td>
-                    </form>
-                </tr>
-                <tr>
-                    <!-- Форма переместить в -->
-                    <form action="{{url(route('boards.tasks.move',['board_id'=>$board_id,'task'=>$task,])) }}" method="POST">
-                        {{ csrf_field() }}
-                        <td>
-                            <p>
-                                <select name="board_id" size="1">
-                                    <option>Выберите доску</option>
-                                    @foreach($boards as $board)
-                                        <option value="{{$board->id}}">{{$board->name}}</option>
-                                    @endforeach
-                                </select>
-                            </p>
-                        </td>
-                        <td>
-                            <button type="submit" id="replace-task-{{ $task->id }}" class="btn btn-danger">
-                                <i class="fa fa-btn fa-trash"></i>Переместить задачу
-                            </button>
-                        </td>
-                    </form>
-                </tr>
-                <tr>
-                    <td>   </td>
-                    <td>   </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+
+            </div>
+
+        </div>
     </div>
-</div>
+@endsection

@@ -20,283 +20,254 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function userCantSeeOtherUserBoard()
     {
-        Task::truncate();
-        Board::truncate();
-        User::truncate();
-        $user1 = User::create([
-            'name' => 'user1',
-            'password' => 'Pass1234',
-            'email' => 'user1t@mail.ru'
-        ]);
-        $user2 = User::create([
-            'name' => 'user2',
-            'password' => 'Pass1234',
-            'email' => 'user2t@mail.ru'
-        ]);
-        $board1 = Board::create([
-            'user_id' => $user1->id,
-            'color'=>'#FF0000',
-            'name' => 'board1'
-        ]);
+        $this->clearDatabase();
+        $user1 = $this->createUser();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $response = $this->actingAs($user1)->get(route('boards.tasks.index', [$board2->id]));
 
-        $board2 = Board::create([
-            'user_id' => $user2->id,
-            'color'=>'#FF0000',
-            'name' => 'board2'
-        ]);
-        $response = $this->actingAs($user1)->get(route('boards.show', [$board2->id]));
-        $user1->delete();
-        $user2->delete();
-        $board1->delete();
-        $board2->delete();
+        $response->assertStatus(403);
+    }
+    /** @test */
+    public function userCantOpenEditOtherUserBoard()
+    {
+        $this->clearDatabase();
+        $user1 = $this->createUser();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $response = $this->actingAs($user1)->get(route('boards.edit', [$board2->id]));
+
         $response->assertStatus(403);
     }
     /** @test */
     public function userCantEditOtherUserBoard()
     {
-        Task::truncate();
-        Board::truncate();
-        User::truncate();
-        $user1 = User::create([
-            'name' => 'user1',
-            'password' => 'Pass1234',
-            'email' => 'user1@mail.ru'
-        ]);
-        $user2 = User::create([
-            'name' => 'user2',
-            'password' => 'Pass1234',
-            'email' => 'user2@mail.ru'
-        ]);
-        $board1 = Board::create([
-            'user_id' => $user1->id,
-            'color'=>'#FF0000',
-            'name' => 'board1'
-        ]);
-
-        $board2 = Board::create([
-            'user_id' => $user2->id,
-            'color'=>'#FF0000',
-            'name' => 'board2'
-        ]);
-        $response = $this->actingAs($user1)->get(route('boards.edit', [$board2->id]));
-        $user1->delete();
-        $user2->delete();
-        $board1->delete();
-        $board2->delete();
+        $this->clearDatabase();
+        $user1 = $this->createUser();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $response = $this->actingAs($user1)->post(route('boards.update', [$board2->id]));
         $response->assertStatus(403);
     }
     /** @test */
     public function userCantDeleteOtherUserBoard()
     {
-        Task::truncate();
-        Board::truncate();
-        User::truncate();
-        $user1 = User::create([
-            'name' => 'user1',
-            'password' => 'Pass1234',
-            'email' => 'user1@mail.ru'
-        ]);
-        $user2 = User::create([
-            'name' => 'user2',
-            'password' => 'Pass1234',
-            'email' => 'user2@mail.ru'
-        ]);
-        $board1 = Board::create([
-            'user_id' => $user1->id,
-            'color'=>'#FF0000',
-            'name' => 'board1'
-        ]);
-
-        $board2 = Board::create([
-            'user_id' => $user2->id,
-            'color'=>'#FF0000',
-            'name' => 'board2'
-        ]);
+        $this->clearDatabase();
+        $user1 = $this->createUser();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
         $response = $this->actingAs($user1)->delete(route('boards.destroy', [$board2]));
-        $user1->delete();
-        $user2->delete();
-        $board1->delete();
-        $board2->delete();
+
         $response->assertStatus(403);
     }
+
+    /** @test */
+    public function userCantCreateTaskOtherUserBoard()
+    {
+        $this->clearDatabase();
+        $user1 = $this->createUser();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $task2 = $this->createTask($user2->id,$board2->id);
+        $response = $this->actingAs($user1)->post(route('boards.tasks.store', [$board2->id,$task2->id]));
+        $response->assertStatus(403);
+    }
+
     /** @test */
     public function userCantOpenEditOtherUserTask()
     {
-        Task::truncate();
-        Board::truncate();
-        User::truncate();
-        $user1 = User::create([
-            'name' => 'user1',
-            'password' => 'Pass1234',
-            'email' => 'user1@mail.ru'
-        ]);
-        $user2 = User::create([
-            'name' => 'user2',
-            'password' => 'Pass1234',
-            'email' => 'user2@mail.ru'
-        ]);
-        $board1 = Board::create([
-            'user_id' => $user1->id,
-            'color'=>'#FF0000',
-            'name' => 'board1'
-        ]);
-
-        $board2 = Board::create([
-            'user_id' => $user2->id,
-            'color'=>'#FF0000',
-            'name' => 'board2'
-        ]);
-        $task2 = Task::create([
-            'name' => 'task2',
-            'description' => '11edg',
-            'board_id' => $board2->id,
-            'user_id'  => $user2->id,
-            'status' => 'a',
-            'scheduled_date' => '2020-07-25',
-            'real_date' => '2020-07-25'
-        ]);
-        $response = $this->actingAs($user1)->get(route('boards.tasks.edit', [$board2->id,$task2]));
-
-        $user1->delete();
-        $user2->delete();
-        $board1->delete();
-        $board2->delete();
-        $task2->delete();
+        $this->clearDatabase();
+        $user1 = $this->createUser();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $task2 = $this->createTask($user2->id,$board2->id);
+        $response = $this->actingAs($user1)->get(route('boards.tasks.edit', [$board2->id,$task2->id]));
+        $response->assertStatus(403);
+    }
+    /** @test */
+    public function userCantEditOtherUserTask()
+    {
+        $this->clearDatabase();
+        $user1 = $this->createUser();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $task2 = $this->createTask($user2->id,$board2->id);
+        $response = $this->actingAs($user1)->post(route('boards.tasks.update', [$board2->id,$task2->id]));
         $response->assertStatus(403);
     }
 
     /** @test */
     public function userCantMoveOtherUserTask()
     {
-        Task::truncate();
-        Board::truncate();
-        User::truncate();
-        $user1 = User::create([
-            'name' => 'user1',
-            'password' => 'Pass1234',
-            'email' => 'user1@mail.ru'
-        ]);
-        $user2 = User::create([
-            'name' => 'user2',
-            'password' => 'Pass1234',
-            'email' => 'user2@mail.ru'
-        ]);
-        $board1 = Board::create([
-            'user_id' => $user1->id,
-            'color' => '#FF0000',
-            'name' => 'board1'
-        ]);
-
-        $board2 = Board::create([
-            'user_id' => $user2->id,
-            'color' => '#FF0000',
-            'name' => 'board2'
-        ]);
-        $task2 = Task::create([
-            'name' => 'task2',
-            'description' => '11edg',
-            'board_id' => $board2->id,
-            'user_id' => $user2->id,
-            'status' => 'a',
-            'scheduled_date' => '2020-07-25',
-            'real_date' => '2020-07-25'
-        ]);
-        $response = $this->actingAs($user1)->post(route('boards.tasks.move', [$board2->id, $task2]));
-
-        $user1->delete();
-        $user2->delete();
-        $board1->delete();
-        $board2->delete();
-        $task2->delete();
+        $this->clearDatabase();
+        $user1 = $this->createUser();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $task2 = $this->createTask($user2->id,$board2->id);
+        $response = $this->actingAs($user1)->post(route('boards.tasks.move', [$board2->id, $task2->id]));
         $response->assertStatus(403);
     }
+
     /** @test */
     public function userCantCopyOtherUserTask()
     {
-        Task::truncate();
-        Board::truncate();
-        User::truncate();
-        $user1 = User::create([
-            'name' => 'user1',
-            'password' => 'Pass1234',
-            'email' => 'user1@mail.ru'
-        ]);
-        $user2 = User::create([
-            'name' => 'user2',
-            'password' => 'Pass1234',
-            'email' => 'user2@mail.ru'
-        ]);
-        $board1 = Board::create([
-            'user_id' => $user1->id,
-            'color' => '#FF0000',
-            'name' => 'board1'
-        ]);
-
-        $board2 = Board::create([
-            'user_id' => $user2->id,
-            'color' => '#FF0000',
-            'name' => 'board2'
-        ]);
-        $task2 = Task::create([
-            'name' => 'task2',
-            'description' => '11edg',
-            'board_id' => $board2->id,
-            'user_id' => $user2->id,
-            'status' => 'a',
-            'scheduled_date' => '2020-07-25',
-            'real_date' => '2020-07-25'
-        ]);
+        $this->clearDatabase();
+        $user1 = $this->createUser();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $task2 = $this->createTask($user2->id,$board2->id);
         $response = $this->actingAs($user1)->post(route('boards.tasks.copy', [$board2->id, $task2]));
-
-        $user1->delete();
-        $user2->delete();
-        $board1->delete();
-        $board2->delete();
-        $task2->delete();
         $response->assertStatus(403);
     }
+
     /** @test */
     public function userCantDestroyOtherUserTask()
+    {
+        $this->clearDatabase();
+        $user1 = $this->createUser();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $task2 = $this->createTask($user2->id,$board2->id);
+        $response = $this->actingAs($user1)->delete(route('boards.tasks.destroy', [$board2->id, $task2]));
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function moderCanSeeOtherUserBoard()
+    {
+        $this->clearDatabase();
+        $user1 = $this->createModerator();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $response = $this->actingAs($user1)->get(route('boards.tasks.index', [$board2->id]));
+
+        $response->assertOk();
+    }
+    /** @test */
+    public function moderCanOpenEditOtherUserBoard()
+    {
+        $this->clearDatabase();
+        $user1 = $this->createModerator();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $response = $this->actingAs($user1)->get(route('boards.edit', [$board2->id]));
+        $response->assertOk();
+    }
+    /** @test */
+    public function moderCanEditOtherUserBoard()
+    {
+        $this->clearDatabase();
+        $user1 = $this->createModerator();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $response = $this->actingAs($user1)->post(route('boards.update', [$board2->id]));
+        $response->assertOk();
+    }
+    /** @test */
+    public function moderCanDeleteOtherUserBoard()
+    {
+        $this->clearDatabase();
+        $user1 = $this->createModerator();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $response = $this->actingAs($user1)->delete(route('boards.destroy', [$board2]));
+
+        $response->assertStatus(204);
+    }
+
+
+    /** @test */
+    public function moderCanMoveOtherUserTask()
+    {
+        $this->clearDatabase();
+        $user1 = $this->createModerator();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $task2 = $this->createTask($user2->id,$board2->id);
+        $response = $this->actingAs($user1)->post(route('boards.tasks.move', [$board2->id, $task2]));
+        $response->assertOk();
+    }
+
+    /** @test */
+    public function moderCanCopyOtherUserTask()
+    {
+        $this->clearDatabase();
+        $user1 = $this->createModerator();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $task2 = $this->createTask($user2->id,$board2->id);
+        $response = $this->actingAs($user1)->post(route('boards.tasks.copy', [$board2->id, $task2]));
+        $response->assertOk();
+    }
+
+    /** @test */
+    public function moderCanDestroyOtherUserTask()
+    {
+        $this->clearDatabase();
+        $user1 = $this->createModerator();
+        $user2 = $this->createUser();
+        $board1 = $this->createBoard($user1->id);
+        $board2 = $this->createBoard($user2->id);
+        $task2 = $this->createTask($user2->id,$board2->id);
+        $response = $this->actingAs($user1)->delete(route('boards.tasks.destroy', [$board2->id, $task2]));
+        $response->assertStatus(204);
+    }
+    private function clearDatabase()
     {
         Task::truncate();
         Board::truncate();
         User::truncate();
-        $user1 = User::create([
-            'name' => 'user1',
-            'password' => 'Pass1234',
-            'email' => 'user1@mail.ru'
-        ]);
-        $user2 = User::create([
-            'name' => 'user2',
-            'password' => 'Pass1234',
-            'email' => 'user2@mail.ru'
-        ]);
-        $board1 = Board::create([
-            'user_id' => $user1->id,
-            'color' => '#FF0000',
-            'name' => 'board1'
-        ]);
-
-        $board2 = Board::create([
-            'user_id' => $user2->id,
-            'color' => '#FF0000',
-            'name' => 'board2'
-        ]);
-        $task2 = Task::create([
-            'name' => 'task2',
-            'description' => '11edg',
-            'board_id' => $board2->id,
-            'user_id' => $user2->id,
-            'status' => 'a',
-            'scheduled_date' => '2020-07-25',
-            'real_date' => '2020-07-25'
-        ]);
-        $response = $this->actingAs($user1)->delete(route('boards.tasks.destroy', [$board2->id, $task2]));
-        $user1->delete();
-        $user2->delete();
-        $board1->delete();
-        $board2->delete();
-        $task2->delete();
-        $response->assertStatus(403);
     }
+
+    private function createUser()
+    {
+        $user = factory('App\User')->create();
+        $user->moderator = 0;
+        return $user;
+    }
+
+    private function createModerator()
+    {
+
+        $moderator = factory(User::class)->create();
+        $moderator->moderator = 1;
+        return $moderator;
+    }
+
+    private function createBoard(int $user_id)
+    {
+        /*$board = factory(Board::class)->make([
+            'user_id' => $user_id,
+        ])->save();*/
+        $board = factory(Board::class)->create();
+        $board->user_id = $user_id;
+        $board->save();
+        return $board;
+    }
+
+    private function createTask($user_id,$board_id)
+    {
+        $task = factory(Task::class)->create();
+        $task->board_id = $board_id;
+        $task->user_id = $user_id;
+        $task->save();
+        return $task;
+    }
+
 }

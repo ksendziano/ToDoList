@@ -14,11 +14,12 @@ class CreateBoardsTable extends Migration
     public function up()
     {
         Schema::create('boards', function (Blueprint $table) {
-            $table->id();
+
             $table->integer('user_id')->unsigned()->index();
             $table->string('name');
             $table->string('color');
             $table->timestamps();
+            $table->id();
         });
     }
 

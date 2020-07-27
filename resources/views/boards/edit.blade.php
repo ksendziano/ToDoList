@@ -5,8 +5,7 @@
         <!-- Отображение ошибок проверки ввода -->
     @include('common.errors')
 
-    <!-- Форма новой доски -->
-        <form action="{{route('boards.update',['board'=>$board])}}" method="POST" class="form-horizontal">
+        <form action="{{route('boards.update',['board_id'=>$board->id])}}" method="POST" class="form-horizontal">
         {{ csrf_field() }}
 
         <!-- Имя доски -->

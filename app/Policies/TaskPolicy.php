@@ -16,7 +16,14 @@ class TaskPolicy
      *
      * @return void
      */
-
+    public function index(User $user, Board $board)
+    {
+        return $user->id === $board->user_id||$user->isModerator();
+    }
+    public function create(User $user, Board $board)
+    {
+        return $user->id === $board->user_id||$user->isModerator();
+    }
     public function action(User $user, Task $task)
     {
        // return ;

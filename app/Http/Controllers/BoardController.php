@@ -23,33 +23,19 @@ class BoardController extends Controller
         //$this ->authorize('action',$board);
         $boards=Board::all();
         if($request->user()->isModerator()){
-            return view('boards.index', [
-                'boards' => $boards,
-                'user_id' => $request->user()->id,
-            ]);
+            $boards=Board::all();
         }
         else{
-            return view('boards.index', [
-                'boards' => $this->boards->forUser($request->user()),
-                'user_id' => $request->user()->id,
-            ]);
+            $boards=$request->user()->boards;
         }
-    }
+        $response_data['boards']=$boards;
+        return response()->json($response_data,200);
 
-    public function show(Request $request,$board_id)
-    {
-        $board=Board::find($board_id);
-        $this ->authorize('action',$board);
-        $user = User::find($board->user_id);
-        return view('boards.boards', [
-            'boards' => $this->boards->forUser($user),
-            'board' => $board,
-            'tasks'  => $user->tasks(),
-            'board_id'=>$board->id,
-            'user_id' => $board->user_id,
-        ]);
     }
-   //
+    public function create(Request $request)
+    {
+        return view('boards.create');
+    }
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -60,8 +46,9 @@ class BoardController extends Controller
             'name' => $request->name,
             'color'=> $request->color,
         ]);
+        $board =Board::where('user_id',$request->user()->id);
 
-        return redirect()->route('boards.index');
+        return response()->json($board,200);
     }
 
     public function edit(Request $request,$board_id)
@@ -76,18 +63,16 @@ class BoardController extends Controller
     {
         $board=Board::find($board_id);
         $this ->authorize('action',$board);
-        $board->update([
-            'name' => $request->name,
-            'color'=>$request->color,
-        ]);
-        return redirect()->route('boards.show',['board_id'=>$board->id]);
+        $board=$board->update($request->all());
+        $response_data['boards']=$board;
+        return response()->json($response_data, 200);
     }
     public function destroy(Request $request,Board $board)
     {
         $this ->authorize('action',$board);
         $board->tasks()->delete();
         $board->delete();
-        return redirect()->route('boards.index');
+        return response(null, 204);
     }
     public function download(Request $request)
     {
@@ -103,21 +88,20 @@ class BoardController extends Controller
         $zip_file_name = 'board.zip';
         $zip_archive->open($zip_file_name, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
-        $i = 1;
+
         foreach($boards as $board) {
-            $desk_serialized['name'] = $board->name;
-            $desk_serialized['user'] = $board->user->name;
-            $desk_serialized['tasks'] = $board->tasks;
-            Storage::disk('local')->put('board'.$i.'.json', json_encode($desk_serialized));
-            $path_to_json = Storage::disk('local')->path('board'.$i.'.json');
+            $board_serialized['name'] = $board->name;
+            $board_serialized['user'] = $board->user->name;
+            $board_serialized['tasks'] = $board->tasks;
+            Storage::disk('local')->put('board'.$board->id.'.json', json_encode($board_serialized));
+            $path_to_json = Storage::disk('local')->path('board'.$board->id.'.json');
             $zip_archive->addFile($path_to_json);
-            ++$i;
         }
         $zip_archive->close();
-        $i = 1;
+
         foreach($boards as $board) {
-            Storage::disk('local')->delete('board'.$i.'.json');
-            ++$i;
+            Storage::disk('local')->delete('board'.$board->id.'.json');
+
         }
         return response()->download($zip_file_name);
 
