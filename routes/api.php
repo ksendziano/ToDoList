@@ -24,7 +24,7 @@ Route::name('boards.')->prefix('boards')->group(function() {
     Route::get('/', 'BoardController@index')->name('index');
     Route::get('/{board_id}', 'BoardController@edit')->name('edit');
     Route::post('/{board_id}/edit', 'BoardController@update')->name('update');
-    Route::delete('/{board_id}', 'BoardController@destroy')->name('destroy');
+    Route::delete('/{board}', 'BoardController@destroy')->name('destroy');
 
     Route::name('tasks.')->prefix('{board_id}/tasks')->group(function() {
         Route::get('/', 'TaskController@index')->name('index');

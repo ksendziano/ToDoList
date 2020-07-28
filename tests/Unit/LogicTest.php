@@ -64,7 +64,8 @@ class LogicTest extends TestCase
         $user1 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
         $this->be($user1);
-        $response = $this->delete(route('boards.destroy', [$board1->id]));
+        $response = $this->delete(route('boards.destroy', [$board1]));
+        $response->assertStatus(204);
         $this->assertDatabaseMissing('boards',[
                 'name' => $board1->name,
                 'user_id' => $user1->id

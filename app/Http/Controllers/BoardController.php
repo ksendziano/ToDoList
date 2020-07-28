@@ -20,9 +20,8 @@ class BoardController extends Controller
     }
     public function index(Request $request)
     {
-        $boards=Board::all();
         if($request->user()->isModerator()){
-            $boards=Board::all();
+            $boards = Board::all();
         }
         else{
             $boards=$request->user()->boards;
@@ -40,7 +39,7 @@ class BoardController extends Controller
             'name' => 'required|max:255',
         ]);
         $request->user()->boards()->create([
-            'user_id'=>$request->user()->id,
+            'user_id'=> $request->user()->id,
             'name' => $request->name,
             'color'=> $request->color,
         ]);
@@ -51,7 +50,7 @@ class BoardController extends Controller
 
     public function edit(Request $request,$board_id)
     {
-        $board=Board::find($board_id);
+        $board = Board::find($board_id);
         $this ->authorize('action',$board);
         return view('boards.edit', [
             'board'=>$board,
@@ -59,13 +58,13 @@ class BoardController extends Controller
     }
     public function update(Request $request,$board_id)
     {
-        $board=Board::find($board_id);
+        $board = Board::find($board_id);
         $this ->authorize('action',$board);
-        $board=$board->update($request->all());
+        $board = $board->update($request->all());
         $response_data['boards']=$board;
         return response()->json($response_data, 200);
     }
-    public function destroy(Request $request,Board $board)
+    public function destroy(Board $board)
     {
         $this ->authorize('action',$board);
         $board->tasks()->delete();
@@ -84,8 +83,6 @@ class BoardController extends Controller
         $zip_archive = new \ZipArchive();
         $zip_file_name = 'board.zip';
         $zip_archive->open($zip_file_name, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-
-
         foreach($boards as $board) {
             $board_serialized['name'] = $board->name;
             $board_serialized['user'] = $board->user->name;
@@ -95,7 +92,6 @@ class BoardController extends Controller
             $zip_archive->addFile($path_to_json);
         }
         $zip_archive->close();
-
         foreach($boards as $board) {
             Storage::disk('local')->delete('board'.$board->id.'.json');
 
