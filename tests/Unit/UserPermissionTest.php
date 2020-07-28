@@ -14,7 +14,7 @@ class UserPermissionTest extends TestCase
     public function guestCantCreateBoards()
     {
 
-        $response = $this->get('boards/create');
+        $response = $this->get('api/boards/create');
         $response->assertStatus(302);
     }
     /** @test */
@@ -155,17 +155,6 @@ class UserPermissionTest extends TestCase
         $response->assertOk();
     }
     /** @test */
-    public function moderCanOpenEditOtherUserBoard()
-    {
-        $this->clearDatabase();
-        $user1 = $this->createModerator();
-        $user2 = $this->createUser();
-        $board1 = $this->createBoard($user1->id);
-        $board2 = $this->createBoard($user2->id);
-        $response = $this->actingAs($user1)->get(route('boards.edit', [$board2->id]));
-        $response->assertOk();
-    }
-    /** @test */
     public function moderCanEditOtherUserBoard()
     {
         $this->clearDatabase();
@@ -199,7 +188,7 @@ class UserPermissionTest extends TestCase
         $board1 = $this->createBoard($user1->id);
         $board2 = $this->createBoard($user2->id);
         $task2 = $this->createTask($user2->id,$board2->id);
-        $response = $this->actingAs($user1)->post(route('boards.tasks.move', [$board2->id, $task2]));
+        $response = $this->actingAs($user1)->post(route('boards.tasks.move', ['board_id'=>$board2->id, 'task_id'=>$task2->id, 'to_board_id' => $board1->id]));
         $response->assertOk();
     }
 
@@ -212,7 +201,7 @@ class UserPermissionTest extends TestCase
         $board1 = $this->createBoard($user1->id);
         $board2 = $this->createBoard($user2->id);
         $task2 = $this->createTask($user2->id,$board2->id);
-        $response = $this->actingAs($user1)->post(route('boards.tasks.copy', [$board2->id, $task2]));
+        $response = $this->actingAs($user1)->post(route('boards.tasks.copy', ['board_id'=>$board2->id, 'task_id'=>$task2->id, 'to_board_id' => $board1->id]));
         $response->assertOk();
     }
 

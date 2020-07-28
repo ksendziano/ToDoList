@@ -30,7 +30,6 @@ class TaskController extends Controller
         if (!policy(Task::class)->index($request->user(), $board)) {
             abort(403);
         }
-        //$this ->authorize('index',$board,Task::class);
         return response()->json($tasks,200);
     }
     public function create(Request $request,$board_id)
@@ -69,7 +68,7 @@ class TaskController extends Controller
         $this ->authorize('action',$task);
         $request->user()->tasks()->create([
             'name' => $task->name,
-            'board_id' => $request->board_id,
+            'board_id' => $request->to_board_id,
             'description' => $task->description,
             'scheduled_date' => $task->scheduled_date,
             'real_date' => $task->scheduled_date,
@@ -77,12 +76,11 @@ class TaskController extends Controller
         ]);
         return response(null, 200);
     }
-    public function move(Request $request,$board_id,Task $task)
+    public function move(Request $request,$board_id,$task_id)
     {
-        $task->name = 'sosat';
-        $task->save();
+        $task=Task::find($task_id);
         $this ->authorize('action',$task);
-        $task->board_id = $request->board_id;
+        $task->board_id = $request->to_board_id;
         $task->save();
         return response(null, 200);
     }

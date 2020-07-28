@@ -20,7 +20,6 @@ class BoardController extends Controller
     }
     public function index(Request $request)
     {
-        //$this ->authorize('action',$board);
         $boards=Board::all();
         if($request->user()->isModerator()){
             $boards=Board::all();
@@ -28,8 +27,7 @@ class BoardController extends Controller
         else{
             $boards=$request->user()->boards;
         }
-        $response_data['boards']=$boards;
-        return response()->json($response_data,200);
+        return response()->json($boards,200);
 
     }
     public function create(Request $request)
@@ -76,11 +74,10 @@ class BoardController extends Controller
     }
     public function download(Request $request)
     {
-        $current_user = $request->user();
-        if ($current_user->isModerator()) {
+        if ($request->user()->isModerator()) {
             $boards = Board::all();
         } else {
-           $boards = $current_user->boards;
+           $boards = $request->user()->boards;
         }
         if (count($boards) == 0)
             return redirect()->route('boards.index');
