@@ -11,7 +11,7 @@
                     margin-right: auto;
                 }
             </style>
-    <form action="{{ url(route('boards.tasks.update',['board_id'=>$board_id,'task'=>$task,])) }}" method="POST">
+    <form action="{{ url(route('boards.tasks.update',['board_id'=>$board_id,'task_id'=>$task->id,])) }}" method="POST">
         {{ csrf_field() }}
         <table class="table table-striped task-table" id="edit-table">
         <div class="form-group">
@@ -49,10 +49,8 @@
                 <td>
                 <p><select name="status" size="1">
                         <option disabled>Текущий статус {{$task->status}}</option>
-                        <option value="a">a</option>
-                        <option value="b">b</option>
-                        <option value="c">c</option>
-                        <option value="d">d</option>
+                        <option value="0">Сделана</option>
+                        <option value="1">Не сделана</option>
                     </select></p>
                 </td>
             </div>
@@ -64,10 +62,8 @@
             </div>
             </tr>
             <tr>
-            <div>
-                <td><p><b>Реальные сроки</b></p></td>
-                <td><p><input type="date"  name="real_date"></p></td>
-            </div>
+
+
             </tr>
         </div>
         <tr>

@@ -30,10 +30,8 @@
                 <div>
                     <p><select name="status" size="1">
                             <option >Выберите статус задачи</option>
-                            <option value="a">a</option>
-                            <option value="b">b</option>
-                            <option value="c">c</option>
-                            <option value="d">d</option>
+                            <option value="0">Не сделана</option>
+                            <option value="1">Сделана</option>
                         </select></p>
                 </div>
             </td>

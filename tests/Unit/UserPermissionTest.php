@@ -15,7 +15,7 @@ class UserPermissionTest extends TestCase
     public function guestCantCreateBoards()
     {
 
-        $response = $this->get('api/boards/create');
+        $response = $this->get('/boards/create');
         $response->assertStatus(302);
     }
     /** @test */

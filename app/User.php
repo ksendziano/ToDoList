@@ -38,11 +38,11 @@ class User extends Authenticatable
     ];
     public function tasks()
     {
-        return $this->hasMany(task::class);
+        return $this->hasMany(Task::class);
     }
     public function boards()
     {
-        return $this->hasMany(board::class);
+        return $this->hasMany(Board::class);
     }
     public function isModerator()
     {
