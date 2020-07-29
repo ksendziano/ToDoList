@@ -11,7 +11,7 @@ $factory->define(Task::class, function (Faker $faker) {
         'description' => $faker->realText(100),
         'scheduled_date' => $faker->date(),
         'real_date' => $faker->date(),
-        'status' => 'a',
+        'status' => 0,
         'board_id' => 1,
         'user_id' =>1,
     ];

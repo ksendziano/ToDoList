@@ -7,6 +7,7 @@ use App\Task;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Carbon\Carbon;
 class LogicTest extends TestCase
 {
     use RefreshDatabase;
@@ -150,7 +151,7 @@ class LogicTest extends TestCase
                     'description' => 'description',
                     'real_date' => '10.10.20',
                     'scheduled_date' => '10.10.20',
-                    'status' => 'a'
+                    'status' => 0
                 ]));
 
         $this->assertDatabaseHas(
@@ -162,7 +163,7 @@ class LogicTest extends TestCase
                 'description' => 'description',
                 'real_date' => '10.10.20',
                 'scheduled_date' => '10.10.20',
-                'status' => 'a'
+                'status' => 0
             ]
         );
     }
@@ -192,15 +193,14 @@ class LogicTest extends TestCase
         $response = $this->post(route('boards.tasks.update', [$board1->id, $task1->id,
             'name' => 'newTaskName',
             'description' => 'newDescription',
-            'status' => 'b',
-            'real_date' => '2020-07-10',
+            'status' => 1,
             'scheduled_date' => '2020-02-10'
         ]));
         $this->assertDatabaseHas('tasks', [
             'name' => 'newTaskName',
             'description' => 'newDescription',
-            'status' => 'b',
-            'real_date' => '2020-07-10',
+            'status' => 1,
+            'real_date' => date('Y-m-d'),
             'scheduled_date' => '2020-02-10'
         ]);
     }

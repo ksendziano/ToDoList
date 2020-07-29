@@ -13,22 +13,10 @@ git submodule update
 ```
 composer install
 ```
-
-В папке проекта копируйте .env.exampleв .env:
+Установите ключ шифрования командой
 ```bash
-cp .env.example .env
+php artisan key:generate
 ```
-
-Откройте .env файл вашего проекта и установите следующее:
-```
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=app
-DB_USERNAME=root
-DB_PASSWORD=root
-```
-
 Войдите в папку laradock и переименуйте env-exampleв .env.:
 ```bash
 cp env-example .env
@@ -56,8 +44,8 @@ docker-compose exec workspace bash
 php artisan migrate
 ```
 
+
 Для запуска тестов, в workspace используйте команду:
 ```bash
 phpunit
 ```
-

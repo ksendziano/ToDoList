@@ -6,6 +6,7 @@ use App\Board;
 use App\Http\Requests;
 use App\Repositories\TaskRepository;
 use App\Task;
+use Carbon\Carbon;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -101,9 +102,14 @@ class TaskController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'scheduled_date' => $request->scheduled_date,
-            'real_date' => $request->real_date,
-            'status' => $request->status,
         ]);
+        if($request->status==1)
+        {
+            $task->update([
+                'status'=> 1,
+                'real_date'=>date('Y-m-d')
+            ]);
+        }
         return response()->json($task, 200);
     }
     public function destroy(Request $request,$board_id, $task_id)
