@@ -1,4 +1,3 @@
-.idea
 /node_modules
 /public/hot
 /public/storage
@@ -8,7 +7,7 @@
 /storage
 *.zip
 *.rar
-.env
+.env.example
 .env.backup
 .phpunit.result.cache
 Homestead.json
