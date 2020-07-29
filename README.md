@@ -4,7 +4,10 @@ ToDoList
 
 Клонируйте проект вместе с модулем:
 ```bash
-git clone --recursive https://github.com/chaconinc/MainProject
+git submodule init
+```
+```bash
+git submodule update
 ```
 Выполните команду:
 ```
