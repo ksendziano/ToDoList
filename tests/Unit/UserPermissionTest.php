@@ -6,10 +6,11 @@ use App\User;
 use App\Task;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 class UserPermissionTest extends TestCase
 {
-
+    use RefreshDatabase;
     /** @test */
     public function guestCantCreateBoards()
     {
@@ -20,7 +21,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function userCantSeeOtherUserBoard()
     {
-        $this->clearDatabase();
         $user1 = $this->createUser();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -32,7 +32,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function userCantOpenEditOtherUserBoard()
     {
-        $this->clearDatabase();
         $user1 = $this->createUser();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -44,7 +43,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function userCantEditOtherUserBoard()
     {
-        $this->clearDatabase();
         $user1 = $this->createUser();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -55,7 +53,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function userCantDeleteOtherUserBoard()
     {
-        $this->clearDatabase();
         $user1 = $this->createUser();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -68,7 +65,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function userCantCreateTaskOtherUserBoard()
     {
-        $this->clearDatabase();
         $user1 = $this->createUser();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -81,7 +77,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function userCantOpenEditOtherUserTask()
     {
-        $this->clearDatabase();
         $user1 = $this->createUser();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -93,7 +88,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function userCantEditOtherUserTask()
     {
-        $this->clearDatabase();
         $user1 = $this->createUser();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -106,7 +100,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function userCantMoveOtherUserTask()
     {
-        $this->clearDatabase();
         $user1 = $this->createUser();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -119,7 +112,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function userCantCopyOtherUserTask()
     {
-        $this->clearDatabase();
         $user1 = $this->createUser();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -132,7 +124,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function userCantDestroyOtherUserTask()
     {
-        $this->clearDatabase();
         $user1 = $this->createUser();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -145,7 +136,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function moderCanSeeOtherUserBoard()
     {
-        $this->clearDatabase();
         $user1 = $this->createModerator();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -157,7 +147,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function moderCanEditOtherUserBoard()
     {
-        $this->clearDatabase();
         $user1 = $this->createModerator();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -168,7 +157,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function moderCanDeleteOtherUserBoard()
     {
-        $this->clearDatabase();
         $user1 = $this->createModerator();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -182,7 +170,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function moderCanMoveOtherUserTask()
     {
-        $this->clearDatabase();
         $user1 = $this->createModerator();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -195,7 +182,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function moderCanCopyOtherUserTask()
     {
-        $this->clearDatabase();
         $user1 = $this->createModerator();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -208,7 +194,6 @@ class UserPermissionTest extends TestCase
     /** @test */
     public function moderCanDestroyOtherUserTask()
     {
-        $this->clearDatabase();
         $user1 = $this->createModerator();
         $user2 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -217,13 +202,6 @@ class UserPermissionTest extends TestCase
         $response = $this->actingAs($user1)->delete(route('boards.tasks.destroy', [$board2->id, $task2]));
         $response->assertStatus(204);
     }
-    private function clearDatabase()
-    {
-        Task::truncate();
-        Board::truncate();
-        User::truncate();
-    }
-
     private function createUser()
     {
         $user = factory('App\User')->create();

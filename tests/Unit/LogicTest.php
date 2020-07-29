@@ -6,8 +6,10 @@ use App\User;
 use App\Task;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 class LogicTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic unit test example.
      *
@@ -15,7 +17,7 @@ class LogicTest extends TestCase
      */
     public function testBoardIndex()
     {
-        $this->clearDatabase();
+
         $user = $this->createUser();
         $board = $this->createBoard($user->id);
         $this->be($user);
@@ -36,7 +38,7 @@ class LogicTest extends TestCase
 
     public function testBoardUpdate()
     {
-        $this->clearDatabase();
+
         $user = $this->createUser();
         $board = $this->createBoard($user->id);
         $this->be($user);
@@ -59,7 +61,7 @@ class LogicTest extends TestCase
 
     public function testBoardDelete()
     {
-        $this->clearDatabase();
+
 
         $user1 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -74,7 +76,7 @@ class LogicTest extends TestCase
 
     public function testBoardCreate()
     {
-        $this->clearDatabase();
+
         $user1 = $this->createUser();
 
         $this->be($user1);
@@ -85,7 +87,7 @@ class LogicTest extends TestCase
 
     public function testBoardStore()
     {
-        $this->clearDatabase();
+
         $user1 = $this->createUser();
         $this->be($user1);
         $this->post(route('boards.store', ['name' => 'board_name', 'color' => '#0000FF']));
@@ -98,7 +100,7 @@ class LogicTest extends TestCase
 
     public function testTasksIndex()
     {
-        $this->clearDatabase();
+
         $user1 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
         $task1 = $this->createTask($user1->id,$board1->id);
@@ -122,7 +124,7 @@ class LogicTest extends TestCase
 
     public function testTaskCreate()
     {
-        $this->clearDatabase();
+
 
         $user1 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -134,7 +136,7 @@ class LogicTest extends TestCase
 
     public function testTaskStore()
     {
-        $this->clearDatabase();
+
         $user1 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
 
@@ -167,7 +169,7 @@ class LogicTest extends TestCase
 
     public function testTaskDelete()
     {
-        $this->clearDatabase();
+
         $user1 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
         $task1 = $this->createTask($user1->id,$board1->id);
@@ -180,7 +182,7 @@ class LogicTest extends TestCase
 
     public function testTaskUpdate()
     {
-        $this->clearDatabase();
+
 
         $user1 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -205,7 +207,7 @@ class LogicTest extends TestCase
 
     public function testMoveTask()
     {
-        $this->clearDatabase();
+
 
         $user1 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -220,7 +222,7 @@ class LogicTest extends TestCase
 
     public function testCopyTask()
     {
-        $this->clearDatabase();
+
 
         $user1 = $this->createUser();
         $board1 = $this->createBoard($user1->id);
@@ -231,13 +233,11 @@ class LogicTest extends TestCase
         $response = $this->post(route('boards.tasks.copy', ['board_id'=>$board2->id, 'task_id'=>$task2->id, 'to_board_id' => $board1->id]));
         $response->assertOk();
         $this->assertDatabaseHas('tasks', [
-            'id' => 1,
             'user_id' => $user1->id,
             'board_id' => $board2->id,
             'name' => $task2->name,
         ]);
         $this->assertDatabaseHas('tasks', [
-            'id' => 2,
             'user_id' => $user1->id,
             'board_id' => $board1->id,
             'name' => $task2->name,
@@ -247,7 +247,7 @@ class LogicTest extends TestCase
 
     public function testDownloadBoards()
     {
-        $this->clearDatabase();
+
         $user1 = $this->createUser();
         $board1 = $this->createboard($user1->id);
         $zip_archive = new \ZipArchive();
@@ -267,15 +267,6 @@ class LogicTest extends TestCase
         $response = $this->get(route('boards.download'));
         $this->assertTrue($hash === sha1($zip_file_name));
     }
-
-
-    private function clearDatabase()
-    {
-        Task::truncate();
-        Board::truncate();
-        User::truncate();
-    }
-
     private function createUser()
     {
         $user = factory('App\User')->create();
@@ -293,9 +284,6 @@ class LogicTest extends TestCase
 
     private function createBoard(int $user_id)
     {
-        /*$board = factory(Board::class)->make([
-            'user_id' => $user_id,
-        ])->save();*/
         $board = factory(Board::class)->create();
         $board->user_id = $user_id;
         $board->save();
